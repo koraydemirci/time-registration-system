@@ -1,23 +1,24 @@
+Time Registeration System
+
 The main goal of the Time Registration System is to:
-Provide a digital platform for companies to manage project-based work by tracking time, assigning employees, 
-and generating invoices — all in one backend system.
+Provide a digital platform for companies to manage project-based work by tracking time,assigningemployees, and generating invoices — all in one backend system.
 
 This system should:
-Help employers monitor work hours, track budgets, and bill customers efficiently.
-Help employees log their working hours in a structured way.
-Let customers view invoices and see project summaries.
+    Help employers monitor work hours, track budgets, and bill customers efficiently.
+    Help employees log their working hours in a structured way.
+    Let customers view invoices and see project summaries.
 Target Users:
 Employers
-Can manage projects, employees, customers
-Can track and modify time blocks
-Can view and edit invoices
-Can assign employees and set project budgets
+    Can manage projects, employees, customers
+    Can track and modify time blocks
+    Can view and edit invoices
+    Can assign employees and set project budgets
 Employees
-Can log hours per project (with notes)
-Can see their own time entries
+    Can log hours per project (with notes)
+    Can see their own time entries
 Customers
-Can see invoices for projects
-Can see a summary/status of projects they are involved in
+    Can see invoices for projects
+    Can see a summary/status of projects they are involved in
 
 Time Registration System Functuional Requirement:
 - Employers can register, log in.
@@ -33,3 +34,6 @@ Time Registration System Functuional Requirement:
 - Employees can add details/notes to time blocks.
 - Customers can view invoices.
 - Customers can see limited details about ongoing projects (e.g., current status, summary info).
+
+
+WE ARE USING VENV BUT IGNORING TO THE MAIN
