@@ -1,6 +1,9 @@
 venv
 env
 .env
-*.db
+time_registration.db
+__init__.py
 __pycache__
 *.pyc
+*.db
+*.sqlite
