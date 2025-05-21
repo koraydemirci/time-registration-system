@@ -9,19 +9,21 @@
    - Let customers view invoices and see project summaries.
 
 #  Target Users:
-## *Employers
--   Can manage projects, employees, customers
--   Can track and modify time blocks
--   Can view and edit invoices
--   Can assign employees and set project budgets
-## *Employees
--   Can log hours per project (with notes)
--   Can see their own time entries
-## *Customers
--   Can see invoices for projects
--   Can see a summary/status of projects they are involved in
+## * Employers
+-    Can manage projects, employees, customers
+-    Can track and modify time blocks
+-    Can view and edit invoices
+-    Can assign employees and set project budgets
 
-'''
+## * Employees
+-    Can log hours per project (with notes)
+-    Can see their own time entries
+
+## * Customers
+-    Can see invoices for projects
+-    Can see a summary/status of projects they are involved in
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ## Time Registration System Functuional Requirement:
 - Employers can register, log in.
 - Employers can add customers with details.
@@ -36,7 +38,7 @@
 - Employees can add details/notes to time blocks.
 - Customers can view invoices.
 - Customers can see limited details about ongoing projects (e.g., current status, summary info).
-
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ```
 ## This our Folder Structure:
 Time_Registration_System/
