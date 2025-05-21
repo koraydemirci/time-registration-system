@@ -40,7 +40,6 @@ class ProjectBase(BaseModel):
 
 class ProjectCreate(ProjectBase):
     customer_id: int
-    employee_id: int
     employer_id: int
 
 class ProjectDisplay(BaseModel):
@@ -55,6 +54,8 @@ class ProjectDisplay(BaseModel):
     timeblocks: List['TimeBlockDisplay'] = []
     class Config():
         orm_mode = True
+        
+#assign employee to project
 
 #timeblock schema
 class TimeBlockBase(BaseModel):
@@ -75,7 +76,7 @@ class TimeBlockDisplay(TimeBlockBase):
     class Config():
         orm_mode = True
 
-#Invoice schema
+#Create Invoice schema
 
 
 

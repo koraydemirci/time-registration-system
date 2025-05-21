@@ -1,6 +1,7 @@
 from db.models import  DbTimeBlock
 from sqlalchemy.orm import Session
 from schemas import TimeBlockCreate
+from fastapi import HTTPException
 
 
 # timeblock functions
@@ -19,7 +20,7 @@ def create_timeblock(db: Session, timeblock: TimeBlockCreate) -> DbTimeBlock:
         return new_tb
     except Exception as e:
         db.rollback()
-        raise HttpException(
+        raise HTTPException(
             status_code=500,
             detail=f"Error creating timeblock: {str(e)}"
         )

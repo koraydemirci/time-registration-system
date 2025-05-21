@@ -19,10 +19,9 @@ class DbUser(Base):
 
 #relationships
     projects = relationship("DbProjects", back_populates="customer", primaryjoin="and_(DbUser.id==DbProjects.customer_id , DbUser.type=='customer')")
-    employees = relationship("DbProjects", back_populates="employee", primaryjoin="and_(DbUser.id==DbProjects.employee_id , DbUser.type=='employee')")
     employers = relationship("DbProjects", back_populates="employer", primaryjoin="and_(DbUser.id==DbProjects.employer_id , DbUser.type=='employer')")
     project_assignment = relationship("DbProjectAssigned", back_populates="users", primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
-    timeblocks = relationship("DbTimeBlock", back_populates="employee", primaryjoin="and_(DbUser.id==DbTimeBlock.employee_id , DbUser.type=='employee')")
+    # timeblocks = relationship("DbTimeBlock", back_populates="employee", primaryjoin="and_(DbUser.id==DbTimeBlock.employee_id , DbUser.type=='employee')")
 
 
 class DbProjects(Base):
@@ -39,7 +38,6 @@ class DbProjects(Base):
 
 #    foreign keys
     customer_id = Column(Integer, ForeignKey("users.id"))
-    employee_id = Column(Integer, ForeignKey("users.id"))
     employer_id = Column(Integer, ForeignKey("users.id"))
 
 #    relationships
@@ -48,12 +46,6 @@ class DbProjects(Base):
         back_populates="projects",
         foreign_keys=[customer_id],
         primaryjoin="and_(DbUser.id==DbProjects.customer_id , DbUser.type=='customer')")
-
-    employee = relationship(
-        "DbUser",
-        back_populates="employees",
-        foreign_keys=[employee_id],
-        primaryjoin="and_(DbUser.id==DbProjects.employee_id , DbUser.type=='employee')")
     employer = relationship(
         "DbUser",
         back_populates="employers",
@@ -79,12 +71,11 @@ class DbTimeBlock(Base):
 
 #    foreign keys
     project_id = Column(Integer, ForeignKey("projects.id"))
-    employee_id = Column(Integer, ForeignKey("users.id"))
+    # employee_id = Column(Integer, ForeignKey("users.id"))
 
 #    relationships
     project = relationship("DbProjects", back_populates="timeblocks")
-    employee = relationship("DbUser", back_populates="timeblocks", foreign_keys=[employee_id],
-                            primaryjoin="and_(DbUser.id==DbTimeBlock.employee_id , DbUser.type=='employee')")
+ #   employee = relationship("DbUser", back_populates="timeblocks", foreign_keys=[employee_id])
 
 
 #project_assigned table
