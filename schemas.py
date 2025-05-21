@@ -49,7 +49,6 @@ class ProjectDisplay(BaseModel):
     end_date:  datetime
     budget: float
     customer: Customer
-    employee: Employee
     employer: Employer
     timeblocks: List['TimeBlockDisplay'] = []
     class Config():
