@@ -1,6 +1,14 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
+import enum
+
+#enum for project status
+class ProjectStatus(enum.Enum):
+    active = "active"
+    inactive = "inactive"
+    completed = "completed"
+    on_hold = "on hold"
 
 #employer schema
 class Employer(BaseModel):
@@ -27,7 +35,7 @@ class ProjectBase(BaseModel):
     start_date: Optional[datetime]
     end_date: Optional[datetime]
     budget: float
-    status: enum('active', 'inactive', 'completed', 'on hold') = 'active'
+    status: ProjectStatus= ProjectStatus.active
     hour_rate: Optional[float] = None
 
 class ProjectCreate(ProjectBase):
@@ -38,9 +46,9 @@ class ProjectCreate(ProjectBase):
 class ProjectDisplay(BaseModel):
     name: str
     description: str
-    start_date: str
-    end_date: str
-    budget: int
+    start_date: datetime
+    end_date:  datetime
+    budget: float
     customer: Customer
     employee: Employee
     employer: Employer
@@ -68,3 +76,8 @@ class TimeBlockDisplay(TimeBlockBase):
         orm_mode = True
 
 #Invoice schema
+
+
+
+ProjectDisplay.update_forward_refs()
+TimeBlockDisplay.update_forward_refs()

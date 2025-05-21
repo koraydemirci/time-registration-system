@@ -6,16 +6,20 @@ from datetime import datetime
 
 
 def create_project_assigned(db: Session, project_assigned: ProjectAssignedCreate):
-    new_project_assigned = DbProjectAssigned(
-        user_id=project_assigned.user_id,
-        project_id=project_assigned.project_id)
-    
-    db.add(new_project_assigned)
-    db.commit()
-    db.refresh(new_project_assigned)
-    return new_project_assigned
+    try:
+        new_project_assigned = DbProjectAssigned(
+            user_id=project_assigned.user_id,
+            project_id=project_assigned.project_id)
+        
+        db.add(new_project_assigned)
+        db.commit()
+        db.refresh(new_project_assigned)
+        return new_project_assigned
+    except Exception as e:
+        db.rollback()
+        raise Exception(f"Error creating project assigned: {str(e)}")
 
-def get_project_assigned_by_user(db: Session, user_id: int) -> List[ProjectAssignedDisplay]:
+def get_project_assigned_by_user(db: Session, user_id: int) -> List[DbProjectAssigned]:
     project_assigned = db.query(DbProjectAssigned).filter(DbProjectAssigned.user_id == user_id).all()
     return project_assigned
 
