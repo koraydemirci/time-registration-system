@@ -1,12 +1,22 @@
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import date
-        
+from datetime import datetime
+
+#employer schema
+class Employer(BaseModel):
+    id: int
+    class Config():
+        orm_mode = True
+
+#employee schema
+class Employee(BaseModel):
+    id: int
+    class Config():
+        orm_mode = True
+
 #customer schema
 class Customer(BaseModel):
     id: int
-    name: str
-    email: str
     class Config():
         orm_mode = True
 
@@ -14,12 +24,16 @@ class Customer(BaseModel):
 class ProjectBase(BaseModel):
     name: str
     description: Optional[str] = None
-    start_date: Optional[date]
-    end_date: Optional[date]
-    budget: int
+    start_date: Optional[datetime]
+    end_date: Optional[datetime]
+    budget: float
+    status: enum('active', 'inactive', 'completed', 'on hold') = 'active'
+    hour_rate: Optional[float] = None
 
 class ProjectCreate(ProjectBase):
     customer_id: int
+    employee_id: int
+    employer_id: int
 
 class ProjectDisplay(BaseModel):
     name: str
@@ -28,14 +42,16 @@ class ProjectDisplay(BaseModel):
     end_date: str
     budget: int
     customer: Customer
+    employee: Employee
+    employer: Employer
+    timeblocks: List['TimeBlockDisplay'] = []
     class Config():
         orm_mode = True
 
-
 #timeblock schema
 class TimeBlockBase(BaseModel):
-    date: date
-    hours: int
+    start_date: datetime
+    end_date: datetime
     note: Optional[str] = None
 
 class TimeBlockCreate(TimeBlockBase):
@@ -51,3 +67,4 @@ class TimeBlockDisplay(TimeBlockBase):
     class Config():
         orm_mode = True
 
+#Invoice schema

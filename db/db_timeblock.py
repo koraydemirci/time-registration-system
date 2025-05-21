@@ -5,7 +5,13 @@ from schemas import TimeBlockCreate
 
 # timeblock functions
 def create_timeblock(db: Session, timeblock: TimeBlockCreate):
-    new_tb = DbTimeBlock(**timeblock.dict())
+    new_tb = DbTimeBlock(
+        start_date=timeblock.start_date,
+        end_date=timeblock.end_date,
+        note=timeblock.note,
+        project_id=timeblock.project_id,
+        employee_id=timeblock.employee_id
+    )
     db.add(new_tb)
     db.commit()
     db.refresh(new_tb)

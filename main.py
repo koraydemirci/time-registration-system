@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from routers import projects, timeblock
+from routers import project, timeblock
 from db import models
 from db.database import engine
 
 
 app = FastAPI()
-app.include_router(projects.router)
+app.include_router(project.router)
 app.include_router(timeblock.router)
 
 @app.get('/home', summary="this is our home", description="this is home description",
