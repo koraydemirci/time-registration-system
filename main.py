@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from routers import project, timeblock
 from db import models
 from db.database import engine
+from auth import router as auth_router
 
 
 app = FastAPI()
 app.include_router(project.router)
 app.include_router(timeblock.router)
+app.include_router(auth_router)
 
 @app.get('/', summary="this is our home", description="this is home description",
  response_description="this is description")

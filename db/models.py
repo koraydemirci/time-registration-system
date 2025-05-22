@@ -14,7 +14,9 @@ class DbUser(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    type = Column(Enum("employee", "customer","employer",name="user_type"), nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    password = Column(String, nullable=False)
+    type = Column(String, nullable=False, default="user")  # Add this line
     name = Column(String, nullable=False)
 
 #relationships
