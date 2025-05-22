@@ -76,6 +76,11 @@ class TimeBlockDisplay(TimeBlockBase):
         orm_mode = True
 
 #Create Invoice schema
+class InvoiceBase(BaseModel):
+    project_id: int
+    amount: float
+    due_date: datetime
+    status: str
 
 
 
