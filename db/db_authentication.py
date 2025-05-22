@@ -1,25 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
-from db.hash import Hash
+from fastapi import HTTPException, status
+from auth.hash import Hash
 from db import models
-from db.database import get_db
 from auth import oauth2
-from pydantic import BaseModel, EmailStr
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column
 
-router = APIRouter(
-    tags=['authentication']
-)
-
-class UserSignup(BaseModel):
-    email: EmailStr
-    password: str
-    name: str
-
-@router.post('/signup')
-def signup(request: UserSignup, db: Session = Depends(get_db)):
+def signup(request, db, user_type="customer"):
     user = db.query(models.DbUser).filter(models.DbUser.email == request.email).first()
     if user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
@@ -27,7 +11,7 @@ def signup(request: UserSignup, db: Session = Depends(get_db)):
     new_user = models.DbUser(
         email=request.email,
         password=hashed_password,
-        type="customer",
+        type=user_type,  # parameterized
         name=request.name
     )
     db.add(new_user)
@@ -35,12 +19,7 @@ def signup(request: UserSignup, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return {"message": "User created successfully", "user_id": new_user.id}
 
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-@router.post('/login')
-def login(request: UserLogin, db: Session = Depends(get_db)):
+def login(request, db):
     user = db.query(models.DbUser).filter(models.DbUser.email == request.email).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
