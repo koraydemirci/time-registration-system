@@ -1,7 +1,6 @@
 venv
 env
 .env
-time_registration.db
 __init__.py
 __pycache__
 *.pyc
