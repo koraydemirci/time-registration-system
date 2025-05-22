@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from routers import project, timeblock
 from db import models
 from db.database import engine
-from auth import router as auth_router
+from auth.authentication import router as auth_router
 
 
 app = FastAPI()

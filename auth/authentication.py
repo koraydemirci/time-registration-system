@@ -6,6 +6,8 @@ from db import models
 from db.database import get_db
 from auth import oauth2
 from pydantic import BaseModel, EmailStr
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column
 
 router = APIRouter(
     tags=['authentication']
@@ -25,7 +27,7 @@ def signup(request: UserSignup, db: Session = Depends(get_db)):
     new_user = models.DbUser(
         email=request.email,
         password=hashed_password,
-        type="user",
+        type="customer",
         name=request.name
     )
     db.add(new_user)
