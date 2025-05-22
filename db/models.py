@@ -96,3 +96,11 @@ class DbProjectAssigned(Base):
     projects = relationship("DbProjects", back_populates="project_assignment")
     users = relationship("DbUser", back_populates="project_assignment", foreign_keys=[user_id],
                             primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
+    
+    
+class Customer(Base):
+    __tablename__ = "customers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True)

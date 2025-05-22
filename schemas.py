@@ -75,7 +75,23 @@ class TimeBlockDisplay(TimeBlockBase):
     class Config():
         orm_mode = True
 
-#Create Invoice schema
+# add these after your Customer schema
+
+class CustomerBase(BaseModel):
+    name: str
+    email: str
+
+class CustomerCreate(CustomerBase):
+    pass
+
+class CustomerUpdate(CustomerBase):
+    pass
+
+class CustomerOut(CustomerBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 
 
 
