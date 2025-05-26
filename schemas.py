@@ -80,9 +80,16 @@ class TimeBlockDisplay(TimeBlockBase):
 class CustomerBase(BaseModel):
     name: str
     email: str
+    type: str
+    
+  
 
-class CustomerCreate(CustomerBase):
-    pass
+
+
+class CustomerCreate(BaseModel):
+   name:str
+   email:str
+
 
 class CustomerUpdate(CustomerBase):
     pass
