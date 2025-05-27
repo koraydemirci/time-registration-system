@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator, root_validator
 from typing import List, Optional
 from datetime import datetime
 import enum
@@ -40,9 +40,39 @@ class ProjectBase(BaseModel):
 
 class ProjectCreate(ProjectBase):
     customer_id: int
-    employer_id: int
+    #employer_id: int
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Project A",
+                "description": "Description of Project A",
+                "start_date": "2023-01-01T00:00:00Z",
+                "end_date": "2023-12-31T00:00:00Z",
+                "budget": 100000.0,
+                "status": "active",
+                "hour_rate": 50.0,
+                "customer_id": 1,
+                "employer_id": 1
+            }
+        }
+
+    @validator('name')
+    def name_must_not_be_empty(cls, v):
+        if not v or v.strip():
+            raise ValueError('Project name must not be empty')
+        return v
+    
+    @root_validator
+    def check_dates(cls, values):
+        start_date = values.get('start_date')
+        end_date = values.get('end_date')
+        if start_date and end_date and start_date > end_date:
+            raise ValueError('Start date must be before end date')
+        return values
 
 class ProjectDisplay(BaseModel):
+    id: int
     name: str
     description: str
     start_date: datetime
@@ -52,7 +82,7 @@ class ProjectDisplay(BaseModel):
     employer: Employer
     timeblocks: List['TimeBlockDisplay'] = []
     class Config():
-        orm_mode = True
+        from_attributes = True
         
 #assign employee to project
 

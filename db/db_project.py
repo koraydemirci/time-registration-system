@@ -3,10 +3,14 @@ from sqlalchemy.orm import Session
 from schemas import ProjectCreate
 from typing import List
 from datetime import datetime
+from fastapi import HTTPException
 
 
 def create_project(db: Session, request: ProjectCreate):
     # Check if the customer exists
+    customer = de.query(DbUser).filter(DbUser.id == request.customer_id, DbUser.type =="customer").first()
+    if not customer:
+        raise HTTPException(status_code=422, detail="Customer ID is invalid or does not exist")
     # Check if the employer exists
     new_project = DbProjects(
         name=request.name,

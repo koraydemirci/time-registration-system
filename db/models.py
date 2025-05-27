@@ -15,7 +15,8 @@ class DbUser(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
-    password = Column(String, nullable=False)
+    pass
+word = Column(String, nullable=False)
     type = Column(Enum("employee", "customer","employer",name="user_type"), nullable=False)
     name = Column(String, nullable=False)
 
@@ -25,6 +26,12 @@ class DbUser(Base):
     project_assignment = relationship("DbProjectAssigned", back_populates="users", primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
     # timeblocks = relationship("DbTimeBlock", back_populates="employee", primaryjoin="and_(DbUser.id==DbTimeBlock.employee_id , DbUser.type=='employee')")
 
+class DbEmployer(DbUser):
+    __tablename__ = "employers"
+
+    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    # Inherits all fields from DbUser
+    # Additional fields specific to employer can be added here if needed
 
 class DbProjects(Base):
     __tablename__ = "projects"
