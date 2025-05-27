@@ -15,23 +15,37 @@ class DbUser(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
-    pass
-word = Column(String, nullable=False)
+    password = Column(String, nullable=True)
     type = Column(Enum("employee", "customer","employer",name="user_type"), nullable=False)
     name = Column(String, nullable=False)
 
-#relationships
-    projects = relationship("DbProjects", back_populates="customer", primaryjoin="and_(DbUser.id==DbProjects.customer_id , DbUser.type=='customer')")
-    employers = relationship("DbProjects", back_populates="employer", primaryjoin="and_(DbUser.id==DbProjects.employer_id , DbUser.type=='employer')")
-    project_assignment = relationship("DbProjectAssigned", back_populates="users", primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
-    # timeblocks = relationship("DbTimeBlock", back_populates="employee", primaryjoin="and_(DbUser.id==DbTimeBlock.employee_id , DbUser.type=='employee')")
+    projects = relationship(
+    "DbProjects",
+    back_populates="customer",
+    foreign_keys="DbProjects.customer_id"
+    )
+    employers = relationship(
+        "DbProjects",
+        back_populates="employer",
+        foreign_keys="DbProjects.employer_id"
+    )
+    project_assignment = relationship("DbProjectAssigned", back_populates="users")
 
-class DbEmployer(DbUser):
-    __tablename__ = "employers"
+class Employer(DbUser):
+    __tablename__ = "employer"
+    employer_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
-    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    # Inherits all fields from DbUser
-    # Additional fields specific to employer can be added here if needed
+
+class Employee(DbUser):
+    __tablename__ = "employee"
+    employee_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+
+class Customer(DbUser):
+    __tablename__ = "customer"
+    employee_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+
+
+
 
 class DbProjects(Base):
     __tablename__ = "projects"
@@ -103,3 +117,6 @@ class DbProjectAssigned(Base):
     projects = relationship("DbProjects", back_populates="project_assignment")
     users = relationship("DbUser", back_populates="project_assignment", foreign_keys=[user_id],
                             primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
+
+    
+    

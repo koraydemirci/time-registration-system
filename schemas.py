@@ -105,12 +105,30 @@ class TimeBlockDisplay(TimeBlockBase):
     class Config():
         orm_mode = True
 
-#Create Invoice schema
-class InvoiceBase(BaseModel):
-    project_id: int
-    amount: float
-    due_date: datetime
-    status: str
+# add these after your Customer schema
+
+class CustomerBase(BaseModel):
+    name: str
+    email: str
+    type: str
+    
+  
+
+
+
+class CustomerCreate(BaseModel):
+   name:str
+   email:str
+
+
+class CustomerUpdate(CustomerBase):
+    pass
+
+class CustomerOut(CustomerBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 
 
 
