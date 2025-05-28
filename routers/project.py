@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Body
 from schemas import ProjectCreate, ProjectDisplay
 from sqlalchemy.orm import Session
 from db.database import get_db
@@ -25,3 +25,11 @@ def get_project_by_id(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Project not found")
     return project
 
+
+@router.put("/{project_id}", response_model=ProjectDisplay)
+def update_project(project_id: int, request: ProjectCreate, db: Session = Depends(get_db)):
+    return db_project.update_project(db, project_id, request)
+
+@router.delete("/{project_id}")
+def delete_project(project_id: int, db: Session = Depends(get_db)):
+    return db_project.delete_project(db, project_id)

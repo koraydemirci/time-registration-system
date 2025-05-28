@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator, model_validator
 from typing import List, Optional
 from datetime import datetime
 import enum
@@ -42,7 +42,15 @@ class ProjectCreate(ProjectBase):
     customer_id: int
     employer_id: int
 
+@model_validator(mode='after')
+def validate_dates(self):
+    if self.start_date and self.end_date and self.start_date >= self.end_date:
+        raise ValueError("Start date must be before end date")
+    return self
+
+
 class ProjectDisplay(BaseModel):
+    id: int
     name: str
     description: str
     start_date: datetime
@@ -52,7 +60,7 @@ class ProjectDisplay(BaseModel):
     employer: Employer
     timeblocks: List['TimeBlockDisplay'] = []
     class Config():
-        orm_mode = True
+        from_attributes = True
         
 #assign employee to project
 
@@ -75,21 +83,15 @@ class TimeBlockDisplay(TimeBlockBase):
     class Config():
         orm_mode = True
 
-# add these after your Customer schema
 
 class CustomerBase(BaseModel):
     name: str
     email: str
-    type: str
-    
-  
-
 
 
 class CustomerCreate(BaseModel):
    name:str
    email:str
-
 
 class CustomerUpdate(CustomerBase):
     pass
@@ -99,6 +101,18 @@ class CustomerOut(CustomerBase):
     class Config:
         orm_mode = True
 
+class EmployerBase(BaseModel):
+    name: str
+    email: str
+
+class EmployerCreate(BaseModel):
+    name:str
+    email:str
+
+class EmployerOut(EmployerBase):
+    id: int
+    class Config:
+        orm_mode = True
 
 
 
