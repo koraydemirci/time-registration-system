@@ -1,4 +1,4 @@
-from db.models import DbProjects
+from db.models import DbProjects, Customer,Employer
 from sqlalchemy.orm import Session
 from schemas import ProjectCreate
 from typing import List
@@ -8,10 +8,14 @@ from fastapi import HTTPException
 
 def create_project(db: Session, request: ProjectCreate):
     # Check if the customer exists
-    customer = de.query(DbUser).filter(DbUser.id == request.customer_id, DbUser.type =="customer").first()
+    customer = db.query(Customer).filter(Customer.id == request.customer_id).first()
     if not customer:
         raise HTTPException(status_code=422, detail="Customer ID is invalid or does not exist")
-    # Check if the employer exists
+    employer = db.query(Employer).filter(Employer.id == request.employer_id).first()
+    if not employer:
+        raise HTTPException(status_code=422, detail="Employer ID is invalid or does not exist")
+
+    
     new_project = DbProjects(
         name=request.name,
         description=request.description,
