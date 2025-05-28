@@ -42,6 +42,12 @@ class ProjectCreate(ProjectBase):
     customer_id: int
     employer_id: int
 
+@model_validator(mode='after')
+def validate_dates(self):
+    if self.start_date and self.end_date and self.start_date >= self.end_date:
+        raise ValueError("Start date must be before end date")
+    return self
+
 
 class ProjectDisplay(BaseModel):
     id: int

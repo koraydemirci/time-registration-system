@@ -49,4 +49,21 @@ def get_projects(db: Session):
 def get_project_by_id(db: Session, project_id: int):
     return db.query(DbProjects).filter(DbProjects.id == project_id).first()
 
+def update_project(db: Session, project_id: int, request: ProjectCreate):
+    project = db.query(DbProjects).filter(DbProjects.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    for field, value in request.dict().items():
+        setattr(project, field, value)
+    db.commit()
+    db.refresh(project)
+    return project
+
+def delete_project(db: Session, project_id: int):
+    project = db.query(DbProjects).filter(DbProjects.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    db.delete(project)
+    db.commit()
+    return {"detail": "Project deleted"}
 #assign employee to project
