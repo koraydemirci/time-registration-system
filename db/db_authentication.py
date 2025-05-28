@@ -11,7 +11,6 @@ def signup(request, db, user_type="customer"):
     new_user = models.DbUser(
         email=request.email,
         password=hashed_password,
-        type=user_type,  # parameterized
         name=request.name
     )
     db.add(new_user)
