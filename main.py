@@ -10,11 +10,13 @@ from routers import employer
 
 
 app = FastAPI()
-app.include_router(project.router)
-app.include_router(timeblock.router)
 app.include_router(auth_router)
 app.include_router(customer_router)
 app.include_router(employer.router)
+app.include_router(project.router)
+app.include_router(timeblock.router)
+
+
 
 @app.get('/', summary="this is our home", description="this is home description",
  response_description="this is description")
