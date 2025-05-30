@@ -11,6 +11,8 @@ router = APIRouter(prefix='/projects', tags=['Projects'])
 # Create a new project
 @router.post('/', response_model=ProjectDisplay)
 def create_project(request: ProjectCreate, db: Session = Depends(get_db),  current_user: UserBase = Depends(get_current_user)):
+    if not hasattr(current_user, "id") or getattr(current_user, "user_type", None) != "employer":
+        raise HTTPException(status_code=403, detail="Only employers can create projects")
     return db_project.create_project(db, request, current_user.id)
 
 # Get all projects

@@ -24,7 +24,8 @@ def create_project(db: Session, request: ProjectCreate, employer_id: int):
         budget=request.budget,
         status=request.status.value,
         hour_rate=request.hour_rate,
-        customer_id=request.customer_id
+        customer_id=request.customer_id,
+        employer_id=employer_id
     )
     db.add(new_project)
     db.commit()
