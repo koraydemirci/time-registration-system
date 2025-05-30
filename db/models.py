@@ -17,8 +17,11 @@ class DbUser(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=True)
     name = Column(String, nullable=False)
-
+    type = Column(Enum("employer", "employee", "customer", name="user_type"), nullable=False, default="employer")
     project_assignment = relationship("DbProjectAssigned", back_populates="users")
+
+
+
 
 class Employer(DbUser):
     __tablename__ = "employer"

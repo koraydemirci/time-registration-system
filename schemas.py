@@ -3,6 +3,25 @@ from typing import List, Optional
 from datetime import datetime
 import enum
 
+
+class UserBase(BaseModel):
+    id: int
+    email: str
+    name: str
+
+    class Config:
+        orm_mode = True
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+    user_type: str = "employer" 
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+        
 #enum for project status
 class ProjectStatus(enum.Enum):
     active = "active"
@@ -40,7 +59,6 @@ class ProjectBase(BaseModel):
 
 class ProjectCreate(ProjectBase):
     customer_id: int
-    employer_id: int
 
 @model_validator(mode='after')
 def validate_dates(self):
@@ -56,8 +74,8 @@ class ProjectDisplay(BaseModel):
     start_date: datetime
     end_date:  datetime
     budget: float
-    customer: Customer
-    employer: Employer
+    customer: Optional[Customer] = None
+    employer: Optional[Employer] = None
     timeblocks: List['TimeBlockDisplay'] = []
     class Config():
         from_attributes = True
