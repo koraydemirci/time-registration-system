@@ -133,6 +133,19 @@ class EmployerOut(EmployerBase):
         orm_mode = True
 
 
+# Schema class for employees 
+class EmployeeBase(BaseModel):
+    name: str
+    email: str
+
+class EmployeeCreate(EmployeeBase):
+    pass
+
+class EmployeeOut(EmployeeBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 
 ProjectDisplay.update_forward_refs()
 TimeBlockDisplay.update_forward_refs()

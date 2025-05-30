@@ -6,6 +6,7 @@ from routers.authentication import router as auth_router
 from routers import project, timeblock
 from routers.customer import router as customer_router
 from routers import employer
+from routers import employee
 
 
 
@@ -15,6 +16,7 @@ app.include_router(customer_router)
 app.include_router(employer.router)
 app.include_router(project.router)
 app.include_router(timeblock.router)
+app.include_router(employee.router)
 
 
 
