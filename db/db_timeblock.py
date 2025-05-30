@@ -29,7 +29,7 @@ def get_timeblocks_by_employee(db: Session, employee_id: int) -> list[DbTimeBloc
     try:
         return db.query(DbTimeBlock).filter(DbTimeBlock.employee_id == employee_id).all()
     except Exception as e:
-        raise HttpException(
+        raise HTTPException(
             status_code=500,
             detail=f"Error fetching timeblocks for employee {employee_id}: {str(e)}"
         )
@@ -38,7 +38,7 @@ def get_timeblocks_by_project(db: Session, project_id: int) -> list[DbTimeBlock]
     try:
         return db.query(DbTimeBlock).filter(DbTimeBlock.project_id == project_id).all()
     except Exception as e:
-        raise HttpException(
+        raise HTTPException(
             status_code=500,
             detail=f"Error fetching timeblocks for project {project_id}: {str(e)}"
         )

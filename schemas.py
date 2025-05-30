@@ -1,8 +1,27 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator, model_validator
 from typing import List, Optional
 from datetime import datetime
 import enum
 
+
+class UserBase(BaseModel):
+    id: int
+    email: str
+    name: str
+
+    class Config:
+        orm_mode = True
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+    user_type: str = "employer" 
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+        
 #enum for project status
 class ProjectStatus(enum.Enum):
     active = "active"
@@ -40,19 +59,26 @@ class ProjectBase(BaseModel):
 
 class ProjectCreate(ProjectBase):
     customer_id: int
-    employer_id: int
+
+@model_validator(mode='after')
+def validate_dates(self):
+    if self.start_date and self.end_date and self.start_date >= self.end_date:
+        raise ValueError("Start date must be before end date")
+    return self
+
 
 class ProjectDisplay(BaseModel):
+    id: int
     name: str
     description: str
     start_date: datetime
     end_date:  datetime
     budget: float
-    customer: Customer
-    employer: Employer
+    customer: Optional[Customer] = None
+    employer: Optional[Employer] = None
     timeblocks: List['TimeBlockDisplay'] = []
     class Config():
-        orm_mode = True
+        from_attributes = True
         
 #assign employee to project
 
@@ -75,8 +101,50 @@ class TimeBlockDisplay(TimeBlockBase):
     class Config():
         orm_mode = True
 
-#Create Invoice schema
 
+class CustomerBase(BaseModel):
+    name: str
+    email: str
+
+
+class CustomerCreate(BaseModel):
+   name:str
+   email:str
+
+class CustomerUpdate(CustomerBase):
+    pass
+
+class CustomerOut(CustomerBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class EmployerBase(BaseModel):
+    name: str
+    email: str
+
+class EmployerCreate(BaseModel):
+    name:str
+    email:str
+
+class EmployerOut(EmployerBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+
+# Schema class for employees 
+class EmployeeBase(BaseModel):
+    name: str
+    email: str
+
+class EmployeeCreate(EmployeeBase):
+    pass
+
+class EmployeeOut(EmployeeBase):
+    id: int
+    class Config:
+        orm_mode = True
 
 
 ProjectDisplay.update_forward_refs()

@@ -16,15 +16,38 @@ class DbUser(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
-    password = Column(String, nullable=False)
-    type = Column(Enum("employee", "customer","employer",name="user_type"), nullable=False)
+    password = Column(String, nullable=True)
     name = Column(String, nullable=False)
+    type = Column(Enum("employer", "employee", "customer", name="user_type"), nullable=False, default="employer")
+    project_assignment = relationship("DbProjectAssigned", back_populates="users")
 
-#relationships
-    projects = relationship("DbProjects", back_populates="customer", primaryjoin="and_(DbUser.id==DbProjects.customer_id , DbUser.type=='customer')")
-    employers = relationship("DbProjects", back_populates="employer", primaryjoin="and_(DbUser.id==DbProjects.employer_id , DbUser.type=='employer')")
-    project_assignment = relationship("DbProjectAssigned", back_populates="users", primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
-    # timeblocks = relationship("DbTimeBlock", back_populates="employee", primaryjoin="and_(DbUser.id==DbTimeBlock.employee_id , DbUser.type=='employee')")
+
+
+
+class Employer(DbUser):
+    __tablename__ = "employer"
+    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    projects_as_employer = relationship(
+        "DbProjects",
+        back_populates="employer",
+        foreign_keys="DbProjects.employer_id"
+    )
+
+
+class Employee(DbUser):
+    __tablename__ = "employee"
+    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    employee_name = Column(String , nullable= True)
+    employee_email = Column(String , nullable=True )
+
+class Customer(DbUser):
+    __tablename__ = "customer"
+    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    projects_as_customer = relationship(
+    "DbProjects",
+    back_populates="customer",
+    foreign_keys="DbProjects.customer_id"
+    )
 
 
 class DbProjects(Base):
@@ -40,20 +63,20 @@ class DbProjects(Base):
     hour_rate = Column(Float)
 
 #    foreign keys
-    customer_id = Column(Integer, ForeignKey("users.id"))
-    employer_id = Column(Integer, ForeignKey("users.id"))
+    customer_id = Column(Integer, ForeignKey("customer.id"))
+    employer_id = Column(Integer, ForeignKey("employer.id"))
 
 #    relationships
     customer = relationship(
-        "DbUser",
-        back_populates="projects",
-        foreign_keys=[customer_id],
-        primaryjoin="and_(DbUser.id==DbProjects.customer_id , DbUser.type=='customer')")
+        "Customer",
+        back_populates="projects_as_customer",
+        foreign_keys=[customer_id])
+ 
     employer = relationship(
-        "DbUser",
-        back_populates="employers",
-        foreign_keys=[employer_id],
-        primaryjoin="and_(DbUser.id==DbProjects.employer_id , DbUser.type=='employer')")
+        "Employer",
+        back_populates="projects_as_employer",
+        foreign_keys=[employer_id]
+    )
     project_assignment = relationship("DbProjectAssigned", back_populates="projects")
     timeblocks = relationship("DbTimeBlock", back_populates="project")
 
@@ -95,5 +118,7 @@ class DbProjectAssigned(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     projects = relationship("DbProjects", back_populates="project_assignment")
-    users = relationship("DbUser", back_populates="project_assignment", foreign_keys=[user_id],
-                            primaryjoin="and_(DbUser.id==DbProjectAssigned.user_id , DbUser.type=='employee')")
+    users = relationship("DbUser", back_populates="project_assignment", foreign_keys=[user_id])
+
+    
+    
