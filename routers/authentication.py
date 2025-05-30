@@ -15,10 +15,5 @@ def signup(request: UserCreate, db: Session = Depends(get_db)):
     return db_authentication.signup(request, db, user_type=request.user_type)
 
 @router.post('/login')
-def login(request: UserLogin, db: Session = Depends(get_db)):
-    return db_authentication.login(request, db)
-
-
-@router.post('/token')
-def gwt_token(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     return db_authentication.login(request, db)
