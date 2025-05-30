@@ -3,24 +3,17 @@ from sqlalchemy.orm import Session
 from db.database import get_db
 from pydantic import BaseModel, EmailStr
 from db import db_authentication  
+from fastapi.security import OAuth2PasswordRequestForm
+from schemas import UserCreate, UserLogin
 
-router = APIRouter(
-    tags=['authentication']
+router = APIRouter(prefix='/auth',
+    tags=['Authentication']
 )
 
-class UserSignup(BaseModel):
-    email: EmailStr
-    password: str
-    name: str
-
 @router.post('/signup')
-def signup(request: UserSignup, db: Session = Depends(get_db)):
-    return db_authentication.signup(request, db)
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+def signup(request: UserCreate, db: Session = Depends(get_db)):
+    return db_authentication.signup(request, db, user_type=request.user_type)
 
 @router.post('/login')
-def login(request: UserLogin, db: Session = Depends(get_db)):
+def login(request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     return db_authentication.login(request, db)

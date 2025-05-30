@@ -8,9 +8,9 @@ from db.database import get_db
 from db import models
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-SECRET_KEY = 'fba012a2a0c9c3d884fdf15843f2aa438bac1b5e8527875ecd7187e3ce494158'
+SECRET_KEY = '2d34ce59a41ce49d3d9e6b2d886b127c7db7b06e6021ee596f4e3c3555ddabb1'
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -24,7 +24,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Could not validate credentials',
@@ -40,4 +40,12 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     user = db.query(models.DbUser).filter(models.DbUser.email == email).first()
     if user is None:
         raise credentials_exception
-    return user
+        # Determine user type
+    if db.query(models.Employer).filter(models.Employer.id == user.id).first():
+        user.user_type = "employer"
+    elif db.query(models.Employee).filter(models.Employee.id == user.id).first():
+        user.user_type = "employee"
+    elif db.query(models.Customer).filter(models.Customer.id == user.id).first():
+        user.user_type = "customer"
+    else:
+        return user
