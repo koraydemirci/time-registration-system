@@ -29,9 +29,12 @@ class Employer(DbUser):
         foreign_keys="DbProjects.employer_id"
     )
 
+
 class Employee(DbUser):
     __tablename__ = "employee"
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    employee_name = Column(String , nullable= True)
+    employee_email = Column(String , nullable=True )
 
 class Customer(DbUser):
     __tablename__ = "customer"
