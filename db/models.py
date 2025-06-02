@@ -36,8 +36,8 @@ class Employer(DbUser):
 class Employee(DbUser):
     __tablename__ = "employee"
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    employee_name = Column(String , nullable= True)
-    employee_email = Column(String , nullable=True )
+    name = Column(String , nullable= True)
+    email = Column(String , nullable=True )
 
 class Customer(DbUser):
     __tablename__ = "customer"
