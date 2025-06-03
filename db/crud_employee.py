@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from db.models import Employee
+from Employee.model import Employee
 from schemas import  EmployeeCreate, EmployeeOut
 
 def Create_Employee(db: Session , employee :EmployeeCreate):

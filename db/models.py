@@ -33,11 +33,11 @@ class DbUser(Base):
 #     )
 
 
-class Employee(DbUser):
-    __tablename__ = "employee"
-    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    name = Column(String , nullable= True)
-    email = Column(String , nullable=True )
+# class Employee(DbUser):
+#     __tablename__ = "employee"
+#     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+#     name = Column(String , nullable= True)
+#     email = Column(String , nullable=True )
 
 class Customer(DbUser):
     __tablename__ = "customer"
