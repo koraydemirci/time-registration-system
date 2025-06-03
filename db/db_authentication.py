@@ -1,7 +1,9 @@
 from fastapi import HTTPException, status
 from auth.hash import Hash
 from db import models
+from Employer.model import Employer
 from auth import oauth2
+
 
 def signup(request, db, user_type="employer"):
     user = db.query(models.DbUser).filter(models.DbUser.email == request.email).first()
@@ -11,7 +13,7 @@ def signup(request, db, user_type="employer"):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user type")
     hashed_password = Hash.bcrypt(request.password)
     if user_type == "employer":
-        new_user = models.Employer(
+        new_user = Employer(
         email=request.email,
         password=hashed_password,
         name=request.name

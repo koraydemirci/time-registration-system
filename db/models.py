@@ -23,14 +23,14 @@ class DbUser(Base):
 
 
 
-class Employer(DbUser):
-    __tablename__ = "employer"
-    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    projects_as_employer = relationship(
-        "DbProjects",
-        back_populates="employer",
-        foreign_keys="DbProjects.employer_id"
-    )
+# class Employer(DbUser):
+#     __tablename__ = "employer"
+#     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+#     projects_as_employer = relationship(
+#         "DbProjects",
+#         back_populates="employer",
+#         foreign_keys="DbProjects.employer_id"
+#     )
 
 
 class Employee(DbUser):
