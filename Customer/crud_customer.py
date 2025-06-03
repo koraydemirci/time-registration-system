@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from db.models import Customer 
+
+from Customer.model import Customer
 from schemas import CustomerCreate, CustomerUpdate
 
 def create_customer(db: Session, customer: CustomerCreate):

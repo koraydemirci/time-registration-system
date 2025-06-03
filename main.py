@@ -4,16 +4,17 @@ from db import models
 from db.database import engine
 from routers.authentication import router as auth_router
 from routers import project, timeblock
-from routers.customer import router as customer_router
+#from Customer.customer import router as customer_router
 from Employer import employer
-from routers import employee
+from Employee import employee
+from Customer import customer
 
 
 
 
 app = FastAPI()
 app.include_router(auth_router)
-app.include_router(customer_router)
+app.include_router(customer.router)
 app.include_router(employer.router)
 app.include_router(project.router)
 app.include_router(timeblock.router)
