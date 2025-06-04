@@ -31,15 +31,17 @@ class DbProjects(Base):
         back_populates="projects_as_employer",
         foreign_keys=[employer_id]
     )
-    project_assignment = relationship("DbProjectAssigned", back_populates="projects")
-    timeblocks = relationship("DbTimeBlock", back_populates="project")
+    employee_links = relationship("DbProjectEmployee", back_populates="project")
+    # timeblocks = relationship("DbTimeBlock", back_populates="project")
 
-class DbProjectAssigned(Base):
-    __tablename__ = "project_assigned"
-
+class DbProjectEmployee(Base):
+    __tablename__ = "project_employee"
     id = Column(Integer, primary_key=True, index=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
+    employee_id = Column(Integer, ForeignKey("employee.id"))
 
-    projects = relationship("DbProjects", back_populates="project_assignment")
-    users = relationship("DbUser", back_populates="project_assignment", foreign_keys=[user_id])
+    project = relationship("DbProjects", back_populates="employee_links")
+    employee = relationship("Employee", back_populates="project_links")
+
+# class DbTimeBlock(Base): 
+#     __tablename__ = "timeblocks"

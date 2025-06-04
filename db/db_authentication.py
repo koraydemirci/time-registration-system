@@ -2,6 +2,8 @@ from fastapi import HTTPException, status
 from auth.hash import Hash
 from db import models
 from Employer.model import Employer
+from Employee.model import Employee
+from Customer.model import Customer
 from auth import oauth2
 
 
@@ -19,13 +21,13 @@ def signup(request, db, user_type="employer"):
         name=request.name
     )
     elif user_type == "employee":
-        new_user = models.Employee(
+        new_user = Employee(
         email=request.email,
         password=hashed_password,
         name=request.name
         )
     elif user_type == "customer":
-        new_user = models.Customer(
+        new_user = Customer(
         email=request.email,
         password=hashed_password,
         name=request.name

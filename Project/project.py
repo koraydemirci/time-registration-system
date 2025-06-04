@@ -37,3 +37,14 @@ def update_project(project_id: int, request: ProjectCreate, db: Session = Depend
 @router.delete("/{project_id}")
 def delete_project(project_id: int, db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_user)):
     return db_project.delete_project(db, project_id, current_user.id)
+
+
+@router.post("/{project_id}/assign")
+def assign_employee_to_project(
+    project_id: int ,
+    employee_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserBase = Depends(get_current_user)
+):
+    return db_project.assign_employee_to_project(db, project_id, employee_id, current_user.id
+    )
