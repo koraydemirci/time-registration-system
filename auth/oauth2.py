@@ -40,7 +40,7 @@ def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(
     user = db.query(models.DbUser).filter(models.DbUser.email == email).first()
     if user is None:
         raise credentials_exception
-        # Determine user type
+    # Determine user type
     if db.query(models.Employer).filter(models.Employer.id == user.id).first():
         user.user_type = "employer"
     elif db.query(models.Employee).filter(models.Employee.id == user.id).first():
@@ -48,4 +48,5 @@ def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(
     elif db.query(models.Customer).filter(models.Customer.id == user.id).first():
         user.user_type = "customer"
     else:
-        return user
+        user.user_type = None
+    return user

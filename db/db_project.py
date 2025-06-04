@@ -1,4 +1,4 @@
-from db.models import DbProjects, Customer,Employer
+from db.models import DbProjects, Customer,Employer, Employee, DbProjectEmployee
 from sqlalchemy.orm import Session
 from schemas import ProjectCreate
 from typing import List
@@ -34,12 +34,6 @@ def create_project(db: Session, request: ProjectCreate, employer_id: int):
     if not new_project:
         db.rollback()
         raise Exception("Error creating project")
-    
-    # Automatically assign the customer to the project
-    # project_assigned = DbProjectAssigned(
-    #     project_id=new_project.id,
-    #     user_id=request.customer_id
-    # )
     return new_project
 
 
@@ -69,4 +63,33 @@ def delete_project(db: Session, project_id: int, employer_id: int):
     db.delete(project)
     db.commit()
     return {"detail": "Project deleted"}
+
 #assign employee to project
+def assign_employee_to_project(
+    db: Session,
+    project_id: int,
+    employee_id: int,
+    employer_id: int
+):
+    # Check if the employer exists
+    employer = db.query(Employer).filter(Employer.id == employer_id).first()
+    if not employer:
+        raise HTTPException(status_code=403, detail="Employer not found")
+    
+    # Check if the project exists
+    project = db.query(DbProjects).filter(DbProjects.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # Check if the employee exists
+    employee = db.query(Employee).filter(Employee.id == employee_id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+        
+    if not any(link.employee_id == employee_id for link in project.employee_links):
+        project.employee_links.append(DbProjectEmployee(employee_id=employee_id))
+        db.commit()
+        db.refresh(project)
+        return {"detail": "Employee assigned to project successfully"}
+    else:
+        return {"detail": "Employee already assigned to project"}

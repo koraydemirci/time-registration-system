@@ -18,8 +18,6 @@ class DbUser(Base):
     password = Column(String, nullable=True)
     name = Column(String, nullable=False)
     type = Column(Enum("employer", "employee", "customer", name="user_type"), nullable=False, default="employer")
-    project_assignment = relationship("DbProjectAssigned", back_populates="users")
-
 
 
 
@@ -39,6 +37,9 @@ class Employee(DbUser):
     name = Column(String , nullable= True)
     email = Column(String , nullable=True )
 
+    project_links = relationship("DbProjectEmployee", back_populates="employee")
+
+
 class Customer(DbUser):
     __tablename__ = "customer"
     id = Column(Integer, ForeignKey("users.id"), primary_key=True)
@@ -47,6 +48,7 @@ class Customer(DbUser):
     back_populates="customer",
     foreign_keys="DbProjects.customer_id"
     )
+
 
 
 class DbProjects(Base):
@@ -76,11 +78,25 @@ class DbProjects(Base):
         back_populates="projects_as_employer",
         foreign_keys=[employer_id]
     )
-    project_assignment = relationship("DbProjectAssigned", back_populates="projects")
+    employee_links = relationship("DbProjectEmployee", back_populates="project")
     timeblocks = relationship("DbTimeBlock", back_populates="project")
 
+#Association table
+'''
+    This class represents the project_assigned table in the database. 
+    It contains information about the projects assigned to users.
+    It has foreign key relationships with the projects and users tables, allowing us to associate each project assignment with a project and a user.
+'''
+class DbProjectEmployee(Base):
+    __tablename__ = "project_employee"
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+    employee_id = Column(Integer, ForeignKey("employee.id"))
 
-class DbTimeBlock(Base):
+    project = relationship("DbProjects", back_populates="employee_links")
+    employee = relationship("Employee", back_populates="project_links")
+
+class DbTimeBlock(Base): 
     '''
         This class represents the timeblocks table in the database. 
         It contains information about the time blocks, including the date, hours worked, and a note.
@@ -102,22 +118,6 @@ class DbTimeBlock(Base):
     project = relationship("DbProjects", back_populates="timeblocks")
  #   employee = relationship("DbUser", back_populates="timeblocks", foreign_keys=[employee_id])
 
-
-#project_assigned table
-'''
-    This class represents the project_assigned table in the database. 
-    It contains information about the projects assigned to users.
-    It has foreign key relationships with the projects and users tables, allowing us to associate each project assignment with a project and a user.
-'''
-class DbProjectAssigned(Base):
-    __tablename__ = "project_assigned"
-
-    id = Column(Integer, primary_key=True, index=True)
-    project_id = Column(Integer, ForeignKey("projects.id"))
-    user_id = Column(Integer, ForeignKey("users.id"))
-
-    projects = relationship("DbProjects", back_populates="project_assignment")
-    users = relationship("DbUser", back_populates="project_assignment", foreign_keys=[user_id])
 
     
     

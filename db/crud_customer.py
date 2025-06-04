@@ -29,7 +29,7 @@ def update_customer(db: Session, customer_id: int, customer_data: CustomerUpdate
     return db_customer
 
 def delete_customer(db: Session, customer_id: int):
-    db_customer = db.query(DbUser).filter(DbUser.id == customer_id).first()
+    db_customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if db_customer:
         db.delete(db_customer)
         db.commit()
