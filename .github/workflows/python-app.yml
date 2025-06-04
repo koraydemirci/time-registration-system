@@ -2,12 +2,12 @@ name: Python application
 
 on:
   push:
-    branches: [ '*' ]   # Run on push to any branch
+    branches: [ '*' ]
   pull_request:
-    branches: [ '*' ]   # Run on PR to any branch
+    branches: [ '*' ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
