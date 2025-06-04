@@ -1,17 +1,9 @@
-from sqlalchemy import Column, Integer, Float, String, ForeignKey, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Float
 from db.database import Base
 
 class Invoice(Base):
     __tablename__ = "invoices"
     id = Column(Integer, primary_key=True, index=True)
-    customer_id = Column(Integer, ForeignKey("customer.id"))
-    #project_id = Column(Integer, ForeignKey("project.id"))
+    customer = Column(String, index=True)
     amount = Column(Float)
-    issue_date = Column(Date)
-    due_date = Column(Date)
-    status = Column(String)  # e.g., "paid", "unpaid", "overdue"
-
-    # Relationships
-    #customer = relationship("Customer", backref="invoices")
-    #project = relationship("DbProjects", backref="invoices")
+    description = Column(String)

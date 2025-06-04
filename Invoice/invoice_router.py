@@ -1,40 +1,54 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.database import get_db
-from Invoice.schema import InvoiceCreate, InvoiceUpdate, InvoiceOut
-from Invoice.crud_invoice import create_invoice, get_invoice, get_all_invoices, update_invoice, delete_invoice
-
+import Invoice.model
+import Invoice.schema
 
 router = APIRouter(
     prefix="/invoices",
-    tags=["Invoices"]
+    tags=["invoices"]
 )
 
-@router.post("/", response_model=InvoiceOut)
-def create(invoice: InvoiceCreate, db: Session = Depends(get_db)):
-    return create_invoice(db, invoice)
+# Create
+@router.post("/", response_model=Invoice.schema.InvoiceOut)
+def create_invoice(invoice: Invoice.schema.InvoiceCreate, db: Session = Depends(get_db)):
+    db_invoice = Invoice.model.Invoice(**invoice.dict())
+    db.add(db_invoice)
+    db.commit()
+    db.refresh(db_invoice)
+    return db_invoice
 
-@router.get("/", response_model=list[InvoiceOut])
-def read_all(db: Session = Depends(get_db)):
-    return get_all_invoices(db)
+# Read all
+@router.get("/", response_model=list[Invoice.schema.InvoiceOut])
+def get_invoices(db: Session = Depends(get_db)):
+    return db.query(Invoice.model.Invoice).all()
 
-@router.get("/{invoice_id}", response_model=InvoiceOut)
-def read(invoice_id: int, db: Session = Depends(get_db)):
-    invoice = get_invoice(db, invoice_id)
+# Read one
+@router.get("/{invoice_id}", response_model=Invoice.schema.InvoiceOut)
+def get_invoice(invoice_id: int, db: Session = Depends(get_db)):
+    invoice = db.query(Invoice.model.Invoice).filter(Invoice.model.Invoice.id == invoice_id).first()
     if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
     return invoice
 
-@router.put("/{invoice_id}", response_model=InvoiceOut)
-def update(invoice_id: int, invoice: InvoiceUpdate, db: Session = Depends(get_db)):
-    updated = update_invoice(db, invoice_id, invoice)
-    if not updated:
+# Update
+@router.put("/{invoice_id}", response_model=Invoice.schema.InvoiceOut)
+def update_invoice(invoice_id: int, updated: Invoice.schema.InvoiceUpdate, db: Session = Depends(get_db)):
+    invoice = db.query(Invoice.model.Invoice).filter(Invoice.model.Invoice.id == invoice_id).first()
+    if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
-    return updated
+    for key, value in updated.dict().items():
+        setattr(invoice, key, value)
+    db.commit()
+    db.refresh(invoice)
+    return invoice
 
+# Delete
 @router.delete("/{invoice_id}")
-def delete(invoice_id: int, db: Session = Depends(get_db)):
-    deleted = delete_invoice(db, invoice_id)
-    if not deleted:
+def delete_invoice(invoice_id: int, db: Session = Depends(get_db)):
+    invoice = db.query(Invoice.model.Invoice).filter(Invoice.model.Invoice.id == invoice_id).first()
+    if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
+    db.delete(invoice)
+    db.commit()
     return {"message": "Invoice deleted"}
