@@ -32,7 +32,7 @@ class DbProjects(Base):
         foreign_keys=[employer_id]
     )
     employee_links = relationship("DbProjectEmployee", back_populates="project")
-    timeblocks = relationship("DbTimeBlock", back_populates="project")
+    # timeblocks = relationship("DbTimeBlock", back_populates="project")
 
 class DbProjectEmployee(Base):
     __tablename__ = "project_employee"
@@ -43,5 +43,5 @@ class DbProjectEmployee(Base):
     project = relationship("DbProjects", back_populates="employee_links")
     employee = relationship("Employee", back_populates="project_links")
 
-class DbTimeBlock(Base): 
-    __tablename__ = "timeblocks"
+# class DbTimeBlock(Base): 
+#     __tablename__ = "timeblocks"

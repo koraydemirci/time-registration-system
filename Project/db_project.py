@@ -1,5 +1,5 @@
 
-from Project.model import DbProjects
+from Project.model import DbProjects, DbProjectEmployee
 from Customer.model import Customer
 from Employer.model import Employer
 from Employee.model import Employee
@@ -89,7 +89,7 @@ def assign_employee_to_project(
         raise HTTPException(status_code=404, detail="Employee not found")
         
     if not any(link.employee_id == employee_id for link in project.employee_links):
-        project.employee_links.append(project.DbProjectEmployee(employee_id=employee_id))
+        project.employee_links.append(DbProjectEmployee(employee_id=employee_id))
         db.commit()
         db.refresh(project)
         return {"detail": "Employee assigned to project successfully"}
