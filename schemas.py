@@ -74,19 +74,28 @@ class ProjectDisplay(BaseModel):
     start_date: datetime
     end_date:  datetime
     budget: float
+    status: Optional[str]
     customer: Optional[Customer] = None
     employer: Optional[Employer] = None
-    timeblocks: List['TimeBlockDisplay'] = []
+   # timeblocks: Optional[List['TimeBlockDisplay']] = None
     class Config():
         from_attributes = True
-        
-#assign employee to project
+
 
 #timeblock schema
 class TimeBlockBase(BaseModel):
     start_date: datetime
     end_date: datetime
     note: Optional[str] = None
+    hours: Optional[float] = None
+
+    
+    @field_validator("end_date")
+    def end_after_start(cls, v, info):
+        start_date = info.data.get("start_date")
+        if start_date and v <= start_date:
+            raise ValueError(f"end_date ({v}) must be after start_date ({start_date})")
+        return v
 
 class TimeBlockCreate(TimeBlockBase):
     project_id: int
@@ -94,12 +103,11 @@ class TimeBlockCreate(TimeBlockBase):
 
 class TimeBlockDisplay(TimeBlockBase):
     id: int
-    hours: int
     project_id: int
     employee_id: int
-    project: ProjectDisplay
+    project: Optional[ProjectDisplay] = None 
     class Config():
-        orm_mode = True
+        from_attributes = True
 
 
 class CustomerBase(BaseModel):
