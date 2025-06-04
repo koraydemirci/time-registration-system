@@ -1,4 +1,4 @@
-from db.models import  DbTimeBlock
+from TimeBlock.model import  DbTimeBlock
 from sqlalchemy.orm import Session
 from schemas import TimeBlockCreate
 from fastapi import HTTPException
