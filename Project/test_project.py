@@ -104,10 +104,18 @@ def test_assign_employee_to_project():
         "password": "testpassword"
     }
     emp_resp = client.post("/auth/login", data=emp_login)
-    # You may want to get employee_id from your DB or API if not returned on signup
-    # For this example, let's assume employee_id=2 (or fetch from /employees/ endpoint)
-    employees = client.get("/employees/").json()
-    employee_id = [e["id"] for e in employees if e["email"] == emp_email][0]
+    employees_resp = client.get("/employees/")
+    assert employees_resp.status_code == 200, employees_resp.text
+    try:
+        employees = employees_resp.json()
+    except Exception:
+        raise AssertionError(f"Response is not JSON: {employees_resp.text}")
+
+    assert isinstance(employees, list), f"Expected list, got: {type(employees)} - {employees}"
+
+    employee_id_list = [e["id"] for e in employees if e.get("email") == emp_email]
+    assert employee_id_list, f"Employee with email {emp_email} not found in {employees}"
+    employee_id = employee_id_list[0]
 
     # Assign employee to project
     assign_resp = client.post(f"/projects/{project_id}/assign?employee_id={employee_id}", headers=headers)
