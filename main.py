@@ -9,6 +9,7 @@ from routers.authentication import router as auth_router
 from Employer import employer
 from Employee import employee
 from Customer import customer
+from Invoice import invoice_router
 
 
 
@@ -20,6 +21,7 @@ app.include_router(employer.router)
 app.include_router(project.router)
 app.include_router(timeblock.router)
 app.include_router(employee.router)
+app.include_router(invoice_router.router)
 
 
 
