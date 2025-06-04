@@ -60,3 +60,11 @@ def test_full_flow():
     resp = client.post("/projects/", json=project_data, headers=headers)
     assert resp.status_code in (200, 201)
     assert resp.json()["name"] == "Test Project"
+
+def test_assign_employee_to_project():
+    # ...create employer, login, create project, create employee...
+    # Assign employee to project
+    assign_data = {"employee_id": employee_id}
+    resp = client.post(f"/projects/{project_id}/assign", json=assign_data, headers=employer_headers)
+    assert resp.status_code == 200
+    assert f"Employee {employee_id} assigned to project {project_id}" in resp.json()["detail"]
