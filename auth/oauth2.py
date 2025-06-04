@@ -6,6 +6,7 @@ from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from db.database import get_db
 from db import models
+from Employer.model import Employer
 
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -41,7 +42,7 @@ def get_current_user(token: str = Depends(oauth2_schema), db: Session = Depends(
     if user is None:
         raise credentials_exception
         # Determine user type
-    if db.query(models.Employer).filter(models.Employer.id == user.id).first():
+    if db.query(Employer).filter(Employer.id == user.id).first():
         user.user_type = "employer"
     elif db.query(models.Employee).filter(models.Employee.id == user.id).first():
         user.user_type = "employee"

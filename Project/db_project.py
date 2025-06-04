@@ -1,4 +1,7 @@
-from db.models import DbProjects, Customer,Employer
+
+from Project.model import DbProjects
+from Customer.model import Customer
+from Employer.model import Employer
 from sqlalchemy.orm import Session
 from schemas import ProjectCreate
 from typing import List

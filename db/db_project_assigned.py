@@ -1,4 +1,4 @@
-from db.models import DbProjectAssigned
+from Project.model import DbProjectAssigned
 from sqlalchemy.orm import Session
 from schemas import ProjectAssignedCreate, ProjectAssignedDisplay
 from typing import List
