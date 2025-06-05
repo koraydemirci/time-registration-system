@@ -6,7 +6,7 @@ from Employee.crud_employee import Create_Employee , get_employee
 from Employee.model import Employee
 
 router = APIRouter(
-    prefix="/employee",
+    prefix="/employees",
     tags=["Employees"]
 )
 
