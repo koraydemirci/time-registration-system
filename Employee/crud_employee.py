@@ -14,6 +14,7 @@ def Create_Employee(db: Session , employee :EmployeeCreate):
 
 def get_employee(db:Session, employee_id: int = None) -> list[EmployeeOut]:
     if employee_id:
-        return db.query(Employee).filter(Employee.id == employee_id).first()
+        result= db.query(Employee).filter(Employee.id == employee_id).first()
+        return [result] if result else []
     else:
-        return "message: Please provide employee_id"
+        return db.query(Employee).all()
