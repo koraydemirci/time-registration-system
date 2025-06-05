@@ -32,8 +32,8 @@ class DbProjects(Base):
         foreign_keys=[employer_id]
     )
     employee_links = relationship("DbProjectEmployee", back_populates="project")
-    # timeblocks = relationship("DbTimeBlock", back_populates="project")
-
+    timeblocks = relationship("DbTimeBlock", back_populates="project")
+    
 class DbProjectEmployee(Base):
     __tablename__ = "project_employee"
     id = Column(Integer, primary_key=True, index=True)

@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from Project import project
-# from TimeBlock import timeblock
 from db import models
 from db.database import engine
 from routers.authentication import router as auth_router
@@ -10,7 +9,8 @@ from Employer import employer
 from Employee import employee
 from Customer import customer
 from Invoice import invoice_router
-from Invoice.invoice_router import Invoice
+from TimeBlock import timeblock
+
 
 
 
@@ -24,8 +24,7 @@ app.include_router(invoice_router.router)
 
 
 app.include_router(project.router)
-
-#app.include_router(timeblock.router)
+app.include_router(timeblock.router)
 
 
 
